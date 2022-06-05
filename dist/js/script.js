@@ -342,7 +342,14 @@ window.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('scroll', showModalOnScroll);
   }
 
-  modal(dataModal, dataClose, modalFormClass);
+  modal(dataModal, dataClose, modalFormClass); // nail 
+  // window.addEventListener('scroll', () => {
+  //     if(window.pageYOffset > 50){
+  //         document.querySelector('.offer__text').classList.add('sss');
+  //     } else {
+  //         document.querySelector('.offer__text').classList.remove('sss');
+  //     }
+  // });
 });
 
 /***/ })
