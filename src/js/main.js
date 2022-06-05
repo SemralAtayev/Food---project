@@ -338,4 +338,18 @@ window.addEventListener('DOMContentLoaded', function () {
 
     modal(dataModal, dataClose, modalFormClass);
 
+    // nail 
+
+    // window.addEventListener('scroll', () => {
+
+    //     if(window.pageYOffset > 50){
+    //         document.querySelector('.offer__text').classList.add('sss');
+    //     } else {
+    //         document.querySelector('.offer__text').classList.remove('sss');
+    //     }
+        
+    // });
+
+    
+
 });
