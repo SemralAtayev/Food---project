@@ -318,19 +318,19 @@ window.addEventListener('DOMContentLoaded', function () {
 
         // open modal after some time on site
 
-        const timerOpenModal = setTimeout(openModal, 10000);
+        // const timerOpenModal = setTimeout(openModal, 10000);
 
         // open modal after scroll to end of site
 
-        function showModalOnScroll (){
-            if( window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight){
+        function showModalOnScroll() {
+            if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
                 openModal();
                 window.removeEventListener('scroll', showModalOnScroll);
-            }            
+            }
         }
 
         window.addEventListener('scroll', showModalOnScroll);
-        
+
 
 
 
@@ -338,18 +338,141 @@ window.addEventListener('DOMContentLoaded', function () {
 
     modal(dataModal, dataClose, modalFormClass);
 
-    // nail 
+    // nail ******************************************
 
-    // window.addEventListener('scroll', () => {
+    window.addEventListener('scroll', () => {
 
-    //     if(window.pageYOffset > 50){
-    //         document.querySelector('.offer__text').classList.add('sss');
-    //     } else {
-    //         document.querySelector('.offer__text').classList.remove('sss');
+        if (window.pageYOffset > 50) {
+            document.querySelector('.offer__text').classList.add('sss');
+        } else {
+            document.querySelector('.offer__text').classList.remove('sss');
+        }
+
+    });
+
+    // menu cards template
+
+    // const menuItem = document.querySelector('.menu__item'),
+    //     menuItemImg = menuItem.querySelector('img'),
+    //     menuItemTitle = menuItem.querySelector('.menu__item-subtitle'),
+    //     menuItemDesc = menuItem.querySelector('.menu__item-descr'),
+    //     menuItemPrice = menuItem.querySelector('.menu__item-total span');
+
+    // class MenuItem {
+    //     constructor(scr, title, description, price) {
+    //         this.scr = scr;
+    //         this.title = title;
+    //         this.description = description;
+    //         this.price = price;
     //     }
-        
-    // });
 
-    
+    //     replaceVars(scr, title, description, price) {
+    //         scr.src = `/img/tabs/${this.scr}.jpg`;
+    //         title.innerHTML = this.title;
+    //         description.innerHTML = this.description;
+    //         price.innerHTML = this.price;
+
+    //     }
+    // }
+
+    // const fitness = new MenuItem('vegy', 'Меню 2  "Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', '230');
+
+    // const premium = new MenuItem('elite', 'Меню 2 “Премиум”', 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', '551');
+
+
+    // fitness.replaceVars(menuItemImg, menuItemTitle, menuItemDesc, menuItemPrice);
+
+    // class MenuItem {
+    //     constructor(scr, alt, title, description, price) {
+    //         this.scr = scr;
+    //         this.alt = alt;
+    //         this.title = title;
+    //         this.description = description;
+    //         this.price = price;            
+    //     }
+
+
+
+    //     replaceVars (scr, alt, title, description, price) {
+    //         scr.forEach(img => {
+    //             img.src = `/img/tabs/${this.scr}.jpg`;
+    //         });
+
+    //         alt.forEach(elem => {
+    //             elem.innerHTML = this.alt;
+    //         });
+
+    //         title.forEach(elem => {
+    //             elem.innerHTML = this.title;
+    //         });
+
+    //         description.forEach(text => {
+    //             text.innerHTML = this.description;
+    //         });
+    //         price.forEach(elem => {
+    //             elem.innerHTML = this.price;
+    //         });
+    //     }
+
+    // }
+
+    // const menuItem = document.querySelectorAll('.menu__item'),
+    //     menuItemImg = document.querySelectorAll('.menu__item img'),
+    //     menuItemAlt = document.querySelectorAll('.menu__item img[alt]'),
+    //     menuItemTitle = document.querySelectorAll('.menu__item .menu__item-subtitle'),
+    //     menuItemDesc = document.querySelectorAll('.menu__item .menu__item-descr'),
+    //     menuItemPrice = document.querySelectorAll('.menu__item .menu__item-total span');
+
+
+
+    // const fitness = new MenuItem('vegy', 'vegy_alt', 'Меню 2  "Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', '230');
+
+    // fitness.replaceVars(menuItemImg, menuItemAlt, menuItemTitle, menuItemDesc, menuItemPrice);
+
+
+    class MenuCard {
+        constructor(scr, alt, title, description, price, parentSelector) {
+            this.scr = scr;
+            this.alt = alt;
+            this.title = title;
+            this.description = description;
+            this.price = price;
+            this.parent = document.querySelector(parentSelector);
+            this.transfer = 27;
+            this.changeToUAH();
+        }
+
+        changeToUAH() {
+            this.price = this.price * this.transfer;
+        }
+
+        render() {
+            const element = document.createElement('div');
+
+            element.innerHTML = `
+            <div class="menu__item">
+                    <img src=${this.scr} alt=${this.alt}>
+                    <h3 class="menu__item-subtitle">${this.title}</h3>
+                    <div class="menu__item-descr">${this.description}</div>
+                    <div class="menu__item-divider"></div>
+                    <div class="menu__item-price">
+                        <div class="menu__item-cost">Цена:</div>
+                        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                    </div>
+                </div>
+            `;
+            this.parent.append(element);
+        }
+    }
+
+    new MenuCard(
+        "img/tabs/elite.jpg",
+        "elite",
+        'Меню “Премиум”',
+        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+        9,
+        '.menu .container'
+    ).render();
+
 
 });
