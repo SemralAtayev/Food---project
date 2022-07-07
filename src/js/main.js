@@ -266,77 +266,75 @@ window.addEventListener('DOMContentLoaded', function () {
     // modal **********************************************
 
     const dataModal = document.querySelectorAll('[data-modal]'),
-        dataClose = document.querySelector('[data-close]'),
+      
         modalFormClass = document.querySelector('.modal'),
         body = document.querySelector('body');
+        
 
     // gloal function to create modal in 3 variables dataModalVar, dataCloseVar, formClassVar
 
-    function modal(dataModalVar, dataCloseVar, formClassVar) {
-
-        // function to open modal
-        function openModal() {
-            formClassVar.classList.remove('showing');
-            formClassVar.classList.add('showing');
-            body.classList.add('overflow-hidden');
-            clearInterval(timerOpenModal);
-        }
-
-        // foreach all elements with data attribute data-modal
-        dataModalVar.forEach(element => {
-            element.addEventListener('click', openModal);
-        });
+    // function modal(dataModalVar, dataCloseVar, modalFormClass  // function to open modal
+       
+    // }
 
 
-
-        // function to close modal use in different places
-        function closeModal() {
-            formClassVar.classList.remove('showing');
-            body.classList.remove('overflow-hidden');
-        }
-
-        // close modal on click on x button on modal window
-        dataCloseVar.addEventListener('click', () => {
-            if (formClassVar.classList.contains('showing')) {
-                closeModal();
-            }
-        });
-
-        //close modal on click on another place than modal 
-        modalFormClass.addEventListener('click', (elem) => {
-            if (elem.target === modalFormClass) {
-                closeModal();
-            }
-        });
-
-        // close modal on click on Escape button and check if modal has showing class
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Escape' && formClassVar.classList.contains('showing')) {
-                closeModal();
-            }
-        });
-
-        // open modal after some time on site
-
-        // const timerOpenModal = setTimeout(openModal, 10000);
-
-        // open modal after scroll to end of site
-
-        function showModalOnScroll() {
-            if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-                openModal();
-                window.removeEventListener('scroll', showModalOnScroll);
-            }
-        }
-
-        window.addEventListener('scroll', showModalOnScroll);
-
-
-
-
+    // modal(dataModal, dataClose, modalFormClass);
+    function openModal() {
+        modalFormClass.classList.remove('showing');
+        modalFormClass.classList.add('showing');
+        body.classList.add('overflow-hidden');
+        clearInterval(timerOpenModal);
     }
 
-    modal(dataModal, dataClose, modalFormClass);
+    // foreach all elements with data attribute data-modal
+    dataModal.forEach(element => {
+        element.addEventListener('click', openModal);
+    });
+
+
+
+    // function to close modal use in different places
+    function closeModal() {
+        modalFormClass.classList.remove('showing');
+        body.classList.remove('overflow-hidden');
+    }
+
+    // close modal on click on x button on modal window
+    // dataClose.addEventListener('click', (e) => {
+    //     if (modalFormClass.classList.contains('showing') || e.target == document.getAttribute('data-close')) {
+    //         closeModal();
+    //     }
+    // });
+
+    //close modal on click on another place than modal 
+    modalFormClass.addEventListener('click', (elem) => {
+        if (elem.target === modalFormClass || elem.target.getAttribute('data-close') == '') {
+            closeModal();
+        }
+    });
+
+    // close modal on click on Escape button and check if modal has showing class
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape' && modalFormClass.classList.contains('showing')) {
+            closeModal();
+        }
+    });
+
+    // open modal after some time on site
+
+    const timerOpenModal = setTimeout(openModal, 50000);
+
+    // open modal after scroll to end of site
+
+    function showModalOnScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalOnScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalOnScroll);
+
 
     // nail ******************************************
 
@@ -429,50 +427,216 @@ window.addEventListener('DOMContentLoaded', function () {
 
     // fitness.replaceVars(menuItemImg, menuItemAlt, menuItemTitle, menuItemDesc, menuItemPrice);
 
+    // вариант учителя
+
+    // class MenuCard {
+    //     constructor(scr, alt, title, description, price, parentSelector) {
+    //         this.scr = scr;
+    //         this.alt = alt;
+    //         this.title = title;
+    //         this.description = description;
+    //         this.price = price;
+    //         this.parent = document.querySelector(parentSelector);
+    //         this.transfer = 27;
+    //         this.changeToUAH();
+    //     }
+
+    //     changeToUAH() {
+    //         this.price = this.price * this.transfer;
+    //     }
+
+    //     render() {
+    //         const element = document.createElement('div');
+
+    //         element.innerHTML = `
+    //         <div class="menu__item">
+    //                 <img src=${this.scr} alt=${this.alt}>
+    //                 <h3 class="menu__item-subtitle">${this.title}</h3>
+    //                 <div class="menu__item-descr">${this.description}</div>
+    //                 <div class="menu__item-divider"></div>
+    //                 <div class="menu__item-price">
+    //                     <div class="menu__item-cost">Цена:</div>
+    //                     <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+    //                 </div>
+    //             </div>
+    //         `;
+    //         this.parent.append(element);
+    //     }
+    // }
+
+    // new MenuCard(
+    //     "img/tabs/elite.jpg",
+    //     "elite",
+    //     'Меню “Премиум”',
+    //     'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+    //     9,
+    //     '.menu .container'
+    // ).render();
+
+    // мой вариант конструктора
 
     class MenuCard {
-        constructor(scr, alt, title, description, price, parentSelector) {
-            this.scr = scr;
+        constructor(src, alt, title, desc, price, parentElement, ...classes) {
+            this.src = src;
             this.alt = alt;
             this.title = title;
-            this.description = description;
+            this.desc = desc;
             this.price = price;
-            this.parent = document.querySelector(parentSelector);
-            this.transfer = 27;
-            this.changeToUAH();
+            this.classes = classes;
+            this.parentElement = document.querySelector(parentElement);
+            this.convertation = 27;
+            this.converToUAH();
         }
 
-        changeToUAH() {
-            this.price = this.price * this.transfer;
+        converToUAH() {
+            this.price = this.price * this.convertation;
         }
 
         render() {
-            const element = document.createElement('div');
+            const element = document.createElement("div");
+            if (this.classes.length === 0) {
+                this.element = 'menu__item';
+                element.classList.add(this.element);
+            } else {
+                this.classes.forEach(className => element.classList.add(className));
+            }
 
-            element.innerHTML = `
-            <div class="menu__item">
-                    <img src=${this.scr} alt=${this.alt}>
-                    <h3 class="menu__item-subtitle">${this.title}</h3>
-                    <div class="menu__item-descr">${this.description}</div>
-                    <div class="menu__item-divider"></div>
-                    <div class="menu__item-price">
-                        <div class="menu__item-cost">Цена:</div>
-                        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
-                    </div>
-                </div>
+
+            element.innerHTML = `           
+                <img src=${this.src} alt=${this.alt}">
+                <h3 class="menu__item-subtitle">${this.title}</h3>
+                <div class="menu__item-descr">${this.desc}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                </div>            
             `;
-            this.parent.append(element);
+
+            this.parentElement.append(element);
         }
     }
+
+
+    new MenuCard(
+        "img/tabs/elite.jpg",
+        "elite",
+        'Меню “Премиум”',
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+        9,
+        '.menu .container',
+    ).render();
+
+    new MenuCard(
+        "img/tabs/post.jpg",
+        "post",
+        'Меню "Постное"',
+        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+        14,
+        ".menu .container",
+        'menu__item'
+    ).render();
 
     new MenuCard(
         "img/tabs/elite.jpg",
         "elite",
         'Меню “Премиум”',
         'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        9,
-        '.menu .container'
+        21,
+        ".menu .container",
+        'menu__item'
     ).render();
+
+
+    // Forms
+
+    const forms = document.querySelectorAll('form');
+    const message = {
+        loading: '/img/svg/Spinner.svg',
+        success: 'Спасибо! Скоро мы с вами свяжемся',
+        failure: 'Что-то пошло не так...'
+    };
+
+    forms.forEach(item => {
+        postData(item);
+    });
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            let statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;
+            statusMessage.textContent = message.loading;
+            statusMessage.style.cssText = `margin: 10px auto 0 auto; max-width:25px; display: block;`;
+            // form.appendChild(statusMessage);
+            form.insertAdjacentElement('afterend', statusMessage);
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+            const formData = new FormData(form);
+
+            const object = {};
+            formData.forEach(function (value, key) {
+                object[key] = value;
+            });
+            const json = JSON.stringify(object);
+
+            request.send(json);
+
+            request.addEventListener('load', () => {
+                if (request.status === 200) {
+                    console.log(request.response);                   
+                    thanksModal(message.success);
+                    form.reset();                   
+                    statusMessage.remove();
+                } else {
+                    thanksModal(message.failure);
+                }
+            });
+        });
+    }
+
+    const prevModal = document.querySelector('.modal__dialog');
+
+    function thanksModal(message){
+        prevModal.classList.add('hide');
+
+        const thanskPopup = document.createElement('div');
+        openModal();
+        thanskPopup.classList.add('modal__dialog');
+
+        thanskPopup.innerHTML = `
+            <div class="modal__content">        
+                <div data-close class="modal__close">×</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(thanskPopup);
+
+        setTimeout( ()=>{
+            thanskPopup.remove();
+            prevModal.classList.add('show');
+            prevModal.classList.remove('hide');
+            closeModal();   
+           
+        }, 4000 );
+        
+        
+    }
+
+
+    // fetch('https://jsonplaceholder.typicode.com/posts', {
+    //     method: 'POST',
+    //     body: JSON.stringify( {name: 'Alex'} ),
+    //     headers: {
+    //         'Content-type' : 'application/json'
+    //     }
+    // })
+    // .then(response => response.json())
+    // .then(json => console.log(json));
 
 
 });
