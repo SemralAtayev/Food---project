@@ -65,7 +65,7 @@ gulp.task("copy-assets", () => {
 
 gulp.task("watch", () => {
     browsersync.init({
-		server: "./dist/",
+      proxy: 'foodproj.local',
 		port: 4000,
 		notify: true
     });
@@ -77,7 +77,20 @@ gulp.task("watch", () => {
     gulp.watch("./src/js/**/*.js", gulp.parallel("build-js"));
 });
 
+// gulp.task('serve', function() { 
+//   browserSync.init({
+//     proxy: "foodproj.local/dist" //название папки домена в опен сервере
+//   });
+
+//   gulp.watch("**/*.html").on('change', browserSync.reload);
+// });
+
 gulp.task("build", gulp.parallel("copy-html", "copy-assets", "build-sass", "build-js"));
+
+gulp.task('copy', function () {
+  gulp.src('./src/server.php')
+      .pipe(gulp.dest('./dist/'));
+});
 
 gulp.task("prod", () => {
     gulp.src("./src/index.html")
@@ -121,4 +134,4 @@ gulp.task("prod", () => {
         .pipe(gulp.dest(dist + '/css'));
 });
 
-gulp.task("default", gulp.parallel("watch", "build"));
+gulp.task("default", gulp.parallel("watch", "build", "copy"));
