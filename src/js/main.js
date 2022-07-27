@@ -603,4 +603,5 @@ window.addEventListener("DOMContentLoaded", function () {
   fetch('http://localhost:3000/menu')
   .then(data => data.json())
   .then(pros => console.log(pros));
+  console.log('ss');
 });
