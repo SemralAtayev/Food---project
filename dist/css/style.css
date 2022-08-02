@@ -322,10 +322,19 @@ body.overflow-hidden {
   width: 100%;
   height: 390px;
 }
+.offer__slide.active {
+  display: block;
+}
 .offer__slide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.offer__slide.open {
+  display: block;
+}
+.offer__slide.close {
+  display: none;
 }
 
 .calculating {
