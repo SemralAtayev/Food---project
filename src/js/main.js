@@ -730,7 +730,7 @@ window.addEventListener("DOMContentLoaded", function () {
     width = window.getComputedStyle(slideWrapper).width;
 
     let completeSlider = document.querySelector('.offer__slider');
-    let dots = [];
+ 
 
  
   // console.log(width);
@@ -760,6 +760,8 @@ window.addEventListener("DOMContentLoaded", function () {
   // dots 
 
   let indicatorsDiv = document.createElement('div');
+  let dots = [];
+
   completeSlider.style.position = "relative";
   indicatorsDiv.classList.add('carousel-indicators');
   completeSlider.append(indicatorsDiv);
@@ -776,12 +778,40 @@ window.addEventListener("DOMContentLoaded", function () {
   dots.push(dotsDiv); 
   }
 
-  
+
 
   // dots 
 
   // console.log(+width.slice( width.length , 2) * slide.length);
   // console.log(+width.slice( 0, width.length -2) * (slide.length - 1));
+
+  //functions
+
+  const addActiveDot = function(dotVar){
+    dotVar.forEach(dot => {
+      dot.classList.remove('active');
+    });
+    dotVar[slideIndex - 1].classList.add('active');
+  };
+
+  
+  const checkIndex = function(){
+    if (slideIndex < 10) {
+      currentSlideNumber.innerHTML = `0${slideIndex}`;
+    } else {
+      currentSlideNumber.innerHTML = slideIndex;
+    }
+  };
+
+  const plusIndex = function(){
+    if (slideIndex == slide.length) {
+      slideIndex = 1;
+    } else{
+      slideIndex++;
+    }
+  };
+
+    //functions end
 
   slideNext.addEventListener("click", () => {
     if (offset == +width.slice(0, width.length - 2) * (slide.length - 1)) {
@@ -791,24 +821,11 @@ window.addEventListener("DOMContentLoaded", function () {
     }
     sliderWrapperInner.style.transform = `translateX(-${offset}px)`;
 
+    plusIndex();
 
-    if (slideIndex == slide.length) {
-      slideIndex = 1;
-    } else{
-      slideIndex++;
-    }
+    checkIndex();
 
-    if (slideIndex < 10) {
-      currentSlideNumber.innerHTML = `0${slideIndex}`;
-    } else {
-      currentSlideNumber.innerHTML = slideIndex;
-    }
-
-    dots.forEach(dot => {
-      dot.classList.remove('active');
-    });
-    dots[slideIndex - 1].classList.add('active');
-
+    addActiveDot(dots);
    
   });
 
@@ -820,23 +837,30 @@ window.addEventListener("DOMContentLoaded", function () {
     }
     sliderWrapperInner.style.transform = `translateX(-${offset}px)`;
 
-    if (slideIndex == 1) {
-      slideIndex = slide.length ;
-    } else{
-      slideIndex--;
-    }
+    plusIndex();
 
-    if (slideIndex < 10) {
-      currentSlideNumber.innerHTML = `0${slideIndex}`;
-    } else {
-      currentSlideNumber.innerHTML = slideIndex;
-    }
+    checkIndex();
 
-    dots.forEach(dot => {
-      dot.classList.remove('active');
+    addActiveDot(dots);
+
+  });
+
+  dots.forEach( dot => {
+    dot.addEventListener('click', (e) =>{
+       
+       const slideTo = e.target.getAttribute('data-count');
+
+         slideIndex = slideTo;
+         
+         offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+
+         sliderWrapperInner.style.transform = `translateX(-${offset}px)`;
+
+         addActiveDot(dots); 
+
+        checkIndex();
+
     });
-    dots[slideIndex - 1].classList.add('active');
-
   });
 
   
