@@ -185,7 +185,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   // попытка номер 3
 
-  const deadline = "2022-05-29";
+  const deadline = "2022-09-07";
 
   function setTimer(t) {
     let allTime = Date.parse(t) - Date.parse(new Date()),
@@ -212,7 +212,7 @@ window.addEventListener("DOMContentLoaded", function () {
       minutes = parentTimerClass.querySelector("#minutes"),
       seconds = parentTimerClass.querySelector("#seconds"),
       update = setInterval(updateClock, 1000);
-    updateClock();
+      updateClock();
 
     function updateClock() {
       let timerFunc = setTimer(deadTimerParam);
@@ -497,7 +497,8 @@ window.addEventListener("DOMContentLoaded", function () {
   //     });
   //   });
 
-  axios.get("http://localhost:3000/menu").then((datam) => {
+  axios.get("http://localhost:3000/menu")
+  .then((datam) => {
     datam.data.forEach(({ img, altimg, title, descr, price }) => {
       new MenuCard(
         img,
@@ -727,10 +728,17 @@ window.addEventListener("DOMContentLoaded", function () {
     slideWrapper = document.querySelector(".offer__slider-wrapper"),
     sliderWrapperInner = document.querySelector(".slide__wrapper-inner"),
     width = window.getComputedStyle(slideWrapper).width;
+
+    let completeSlider = document.querySelector('.offer__slider');
+    let dots = [];
+
+ 
   // console.log(width);
 
   const currentSlideNumber = document.querySelector("#current");
   const totalSlideNumber = document.querySelector("#total");
+
+
 
   let slideIndex = 1;
   let offset = 0;
@@ -748,6 +756,29 @@ window.addEventListener("DOMContentLoaded", function () {
   sliderWrapperInner.style.width = 100 * slide.length + "%";
   sliderWrapperInner.style.transition = "all .5s ease";
   slide.forEach((item) => (item.style.width = width));
+
+  // dots 
+
+  let indicatorsDiv = document.createElement('div');
+  completeSlider.style.position = "relative";
+  indicatorsDiv.classList.add('carousel-indicators');
+  completeSlider.append(indicatorsDiv);
+
+  
+  for (let i = 0; i < slide.length; i++) {
+  let dotsDiv = document.createElement('div');
+  dotsDiv.classList.add('dot');
+  dotsDiv.dataset.count = i + 1;
+  if( i == 0){
+    dotsDiv.classList.add('active');
+  }
+  indicatorsDiv.appendChild(dotsDiv);
+  dots.push(dotsDiv); 
+  }
+
+  
+
+  // dots 
 
   // console.log(+width.slice( width.length , 2) * slide.length);
   // console.log(+width.slice( 0, width.length -2) * (slide.length - 1));
@@ -773,6 +804,11 @@ window.addEventListener("DOMContentLoaded", function () {
       currentSlideNumber.innerHTML = slideIndex;
     }
 
+    dots.forEach(dot => {
+      dot.classList.remove('active');
+    });
+    dots[slideIndex - 1].classList.add('active');
+
    
   });
 
@@ -796,7 +832,25 @@ window.addEventListener("DOMContentLoaded", function () {
       currentSlideNumber.innerHTML = slideIndex;
     }
 
+    dots.forEach(dot => {
+      dot.classList.remove('active');
+    });
+    dots[slideIndex - 1].classList.add('active');
+
   });
+
+  
+
+     
+
+    
+
+    //  const indicators = document.querySelector('.carousel-indicators');
+    //  const dot = document.querySelector('.dot');
+
+
+
+
 
   // if(slide.length < 10){
   //   totalSlideNumber.innerHTML = `0${slide.length}`;
