@@ -698,7 +698,7 @@ window.addEventListener("DOMContentLoaded", function () {
         slideWrapper = document.querySelector(".offer__slider-wrapper"),
         sliderWrapperInner = document.querySelector(".slide__wrapper-inner"),
         width = window.getComputedStyle(slideWrapper).width;
-  let completeSlider = document.querySelector('.offer__slider'); // console.log(width);
+  let completeSlider = document.querySelector(".offer__slider"); // console.log(width);
 
   const currentSlideNumber = document.querySelector("#current");
   const totalSlideNumber = document.querySelector("#total");
@@ -717,36 +717,33 @@ window.addEventListener("DOMContentLoaded", function () {
   sliderWrapperInner.style.display = "flex";
   sliderWrapperInner.style.width = 100 * slide.length + "%";
   sliderWrapperInner.style.transition = "all .5s ease";
-  slide.forEach(item => item.style.width = width); // dots 
+  slide.forEach(item => item.style.width = width); // dots
 
-  let indicatorsDiv = document.createElement('div');
-  let dots = [];
   completeSlider.style.position = "relative";
-  indicatorsDiv.classList.add('carousel-indicators');
+  let indicatorsDiv = document.createElement("div");
+  let dots = [];
+  indicatorsDiv.classList.add("carousel-indicators");
   completeSlider.append(indicatorsDiv);
 
   for (let i = 0; i < slide.length; i++) {
-    let dotsDiv = document.createElement('div');
-    dotsDiv.classList.add('dot');
+    let dotsDiv = document.createElement("div");
+    dotsDiv.classList.add("dot");
     dotsDiv.dataset.count = i + 1;
 
     if (i == 0) {
-      dotsDiv.classList.add('active');
+      dotsDiv.classList.add("active");
     }
 
     indicatorsDiv.appendChild(dotsDiv);
     dots.push(dotsDiv);
-  } // dots 
-  // console.log(+width.slice( width.length , 2) * slide.length);
-  // console.log(+width.slice( 0, width.length -2) * (slide.length - 1));
-  //functions
+  } //functions
 
 
   const addActiveDot = function (dotVar) {
     dotVar.forEach(dot => {
-      dot.classList.remove('active');
+      dot.classList.remove("active");
     });
-    dotVar[slideIndex - 1].classList.add('active');
+    dotVar[slideIndex - 1].classList.add("active");
   };
 
   const checkIndex = function () {
@@ -763,14 +760,18 @@ window.addEventListener("DOMContentLoaded", function () {
     } else {
       slideIndex++;
     }
+  };
+
+  const replacePx = function (str) {
+    return +str.replace(/\D/g, "");
   }; //functions end
 
 
   slideNext.addEventListener("click", () => {
-    if (offset == +width.slice(0, width.length - 2) * (slide.length - 1)) {
+    if (offset == replacePx(width) * (slide.length - 1)) {
       offset = 0;
     } else {
-      offset += +width.slice(0, width.length - 2);
+      offset += replacePx(width);
     }
 
     sliderWrapperInner.style.transform = `translateX(-${offset}px)`;
@@ -780,21 +781,22 @@ window.addEventListener("DOMContentLoaded", function () {
   });
   slidePrev.addEventListener("click", () => {
     if (offset == 0) {
-      offset = +width.slice(0, width.length - 2) * (slide.length - 1);
+      offset = replacePx(width) * (slide.length - 1);
     } else {
-      offset -= +width.slice(0, width.length - 2);
+      offset -= replacePx(width);
     }
 
     sliderWrapperInner.style.transform = `translateX(-${offset}px)`;
     plusIndex();
     checkIndex();
     addActiveDot(dots);
-  });
+  }); // add event listener to all dots and when we press one of the dots we going to slide number, which is equal to e.target.getAttribute('data-count')
+
   dots.forEach(dot => {
-    dot.addEventListener('click', e => {
-      const slideTo = e.target.getAttribute('data-count');
+    dot.addEventListener("click", e => {
+      const slideTo = e.target.getAttribute("data-count");
       slideIndex = slideTo;
-      offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+      offset = replacePx(width) * (slideTo - 1);
       sliderWrapperInner.style.transform = `translateX(-${offset}px)`;
       addActiveDot(dots);
       checkIndex();
@@ -833,7 +835,119 @@ window.addEventListener("DOMContentLoaded", function () {
   //   plusSlides(-1);
   // });
   // showSlide(slideIndex);
-  // ----------------------------------------
+  //calculator
+
+  const result = document.querySelector(".calculating__result span");
+  let gender, height, weight, age, ratio;
+
+  if (localStorage.getItem("gender")) {
+    gender = localStorage.getItem("gender");
+  } else {
+    gender = "female";
+    localStorage.setItem("gender", "female");
+  }
+
+  if (localStorage.getItem("ratio")) {
+    ratio = localStorage.getItem("ratio");
+  } else {
+    ratio = 1.375;
+    localStorage.setItem("ratio", 1.375);
+  }
+
+  function addActiveClass(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(elem => {
+      elem.classList.remove(activeClass);
+
+      if (elem.getAttribute("id") === localStorage.getItem("gender") || elem.getAttribute("data-ratio") === localStorage.getItem("ratio")) {
+        elem.classList.add(activeClass);
+      }
+    });
+  }
+
+  addActiveClass("#gender div", "calculating__choose-item_active");
+  addActiveClass(".calculating__choose.calculating__choose_big div", "calculating__choose-item_active");
+
+  function calcResult() {
+    if (!gender || !height || !weight || !age || !ratio) {
+      result.innerHTML = "____";
+      return;
+    } else {
+      if (gender === "female") {
+        result.innerHTML = Math.round(447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio;
+      } else {
+        result.innerHTML = Math.round((88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio);
+      }
+    }
+  }
+
+  calcResult();
+
+  function getStaticInfo(parent, activeClass) {
+    const calcChoose = document.querySelectorAll(`${parent} div`);
+    calcChoose.forEach(e => {
+      e.addEventListener("click", event => {
+        if (event.target.getAttribute("id") === "female") {
+          gender = "female";
+          localStorage.setItem("gender", event.target.getAttribute("id"));
+        } else if (event.target.getAttribute("id") === "male") {
+          gender = "male";
+          localStorage.setItem("gender", event.target.getAttribute("id"));
+        }
+
+        if (event.target.hasAttribute("data-ratio")) {
+          ratio = +event.target.getAttribute("data-ratio");
+          localStorage.setItem("ratio", +event.target.getAttribute("data-ratio"));
+        }
+
+        calcChoose.forEach(ev => {
+          ev.classList.remove(activeClass);
+        });
+        event.target.classList.add(activeClass);
+        calcResult();
+      });
+    });
+  }
+
+  function getDinamicInfo(parent) {
+    const input = document.querySelector(parent).querySelectorAll("input");
+    input.forEach(e => {
+      e.addEventListener("input", event => {
+        if (event.target.id === "height") {
+          if (event.target.value.match(/\D/g)) {
+            event.target.style.border = "1px solid red";
+          } else {
+            event.target.style.border = "";
+            height = +e.value;
+          }
+        }
+
+        if (event.target.id === "weight") {
+          if (event.target.value.match(/\D/g)) {
+            event.target.style.border = "1px solid red";
+          } else {
+            event.target.style.border = "";
+            weight = +e.value;
+          }
+        }
+
+        if (event.target.id === "age") {
+          if (event.target.value.match(/\D/g)) {
+            event.target.style.border = "1px solid red";
+          } else {
+            event.target.style.border = "";
+            age = +e.value;
+          }
+        }
+
+        calcResult();
+      });
+    });
+  }
+
+  getStaticInfo("#gender", "calculating__choose-item_active");
+  getStaticInfo(".calculating__choose.calculating__choose_big", "calculating__choose-item_active");
+  getDinamicInfo(".calculating__choose_medium"); // ----------------------------------------
   // obshiy dom loaded
   // ----------------------------------------
 }); // // hide slides funtion
