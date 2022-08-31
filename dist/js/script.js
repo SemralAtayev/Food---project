@@ -689,9 +689,9 @@ window.addEventListener("DOMContentLoaded", function () {
   //   activateSlide();
   // });
   // popitka 3 s video
+  // console.clear();
 
 
-  console.clear();
   const slide = document.querySelectorAll(".offer__slide"),
         slideNext = document.querySelector(".offer__slider-next"),
         slidePrev = document.querySelector(".offer__slider-prev"),
@@ -962,6 +962,40 @@ window.addEventListener("DOMContentLoaded", function () {
 //     // e[i].classList.add('open');
 //     // e[i].classList.remove('close');
 //   });
+
+class Mobile {
+  constructor(set, operator, hz, langitude) {
+    this._set = set;
+    this.operator = operator;
+    this.hz = hz;
+    this.langitude = langitude;
+  }
+
+  volume() {
+    return this.hz * this.langitude;
+  }
+
+  get settings() {
+    return this.set;
+  }
+
+  set settings(set) {
+    if (this.operator !== 'beeline') {
+      this._set = set;
+    } else {
+      console.log('olmaz');
+    }
+  }
+
+}
+
+let Beeline = new Mobile(7.78, 'beeline', 11, 885);
+let Mega = new Mobile(7.78, 'mega', 10, 20);
+Beeline.settings = 99;
+Mega.settings = 78;
+console.log(Beeline);
+console.log(Mega);
+console.log(Beeline.volume());
 
 /***/ })
 

@@ -63,81 +63,74 @@ gulp.task("copy-assets", () => {
                 .pipe(browsersync.stream());
 });
 
-gulp.task("watch", () => {
-    browsersync.init({
-      proxy: 'foodproj.local',
-		port: 4000,
-		notify: true
-    });
-
-    gulp.watch("./src/index.html", gulp.parallel("copy-html"));
-    gulp.watch("./src/icons/**/*.*", gulp.parallel("copy-assets"));
-    gulp.watch("./src/img/**/*.*", gulp.parallel("copy-assets"));
-    gulp.watch("./src/scss/**/*.scss", gulp.parallel("build-sass"));
-    gulp.watch("./src/js/**/*.js", gulp.parallel("build-js"));
-});
-
-// gulp.task('serve', function() { 
-//   browserSync.init({
-//     proxy: "foodproj.local/dist" //название папки домена в опен сервере
-//   });
-
-//   gulp.watch("**/*.html").on('change', browserSync.reload);
-// });
-
-gulp.task("build", gulp.parallel("copy-html", "copy-assets", "build-sass", "build-js"));
-
-gulp.task('copy', function () {
-  return gulp.src('./src/server.php')
-      .pipe(gulp.dest('./dist/'))
-      .pipe(browsersync.stream());
-});
 gulp.task('copy-json', function () {
   return gulp.src('./src/*json*')
       .pipe(gulp.dest('./dist/'))
       .pipe(browsersync.stream());
 });
 
-gulp.task("prod", () => {
-    gulp.src("./src/index.html")
-        .pipe(gulp.dest(dist));
-    gulp.src("./src/img/**/*.*")
-        .pipe(gulp.dest(dist + "/img"));
-    gulp.src("./src/icons/**/*.*")
-        .pipe(gulp.dest(dist + "/icons"));
-
-    gulp.src("./src/js/main.js")
-        .pipe(webpack({
-            mode: 'production',
-            output: {
-                filename: 'script.js'
-            },
-            module: {
-                rules: [
-                  {
-                    test: /\.m?js$/,
-                    exclude: /(node_modules|bower_components)/,
-                    use: {
-                      loader: 'babel-loader',
-                      options: {
-                        presets: [['@babel/preset-env', {
-                            debug: false,
-                            corejs: 3,
-                            useBuiltIns: "usage"
-                        }]]
-                      }
-                    }
-                  }
-                ]
-              }
-        }))
-        .pipe(gulp.dest(dist + '/js'));
-    
-    return gulp.src("./src/scss/style.scss")
-        .pipe(sass().on('error', sass.logError))
-        .pipe(postcss([autoprefixer()]))
-        .pipe(cleanCSS())
-        .pipe(gulp.dest(dist + '/css'));
+gulp.task('copy-server', function () {
+  return gulp.src('./src/server.php')
+      .pipe(gulp.dest('./dist/'))
+      .pipe(browsersync.stream());
 });
 
-gulp.task("default", gulp.parallel("watch", "build", "copy", "copy-json"));
+gulp.task("build", gulp.parallel("copy-html", "build-js", "build-sass",  "copy-assets", "copy-json", "copy-server" ));
+
+gulp.task("watch", () => {
+  browsersync.init({
+    proxy: 'foodproj.local',
+  port: 4000,
+  notify: true
+  });
+
+  gulp.watch("./src/index.html", gulp.parallel("copy-html"));
+  gulp.watch("./src/icons/**/*.*", gulp.parallel("copy-assets"));
+  gulp.watch("./src/img/**/*.*", gulp.parallel("copy-assets"));
+  gulp.watch("./src/scss/**/*.scss", gulp.parallel("build-sass"));
+  gulp.watch("./src/js/**/*.js", gulp.parallel("build-js"));
+});
+
+gulp.task("default", gulp.parallel("build",  "watch"));
+
+gulp.task("prod", () => {
+  gulp.src("./src/index.html")
+      .pipe(gulp.dest(dist));
+  gulp.src("./src/img/**/*.*")
+      .pipe(gulp.dest(dist + "/img"));
+  gulp.src("./src/icons/**/*.*")
+      .pipe(gulp.dest(dist + "/icons"));
+
+  gulp.src("./src/js/main.js")
+      .pipe(webpack({
+          mode: 'production',
+          output: {
+              filename: 'script.js'
+          },
+          module: {
+              rules: [
+                {
+                  test: /\.m?js$/,
+                  exclude: /(node_modules|bower_components)/,
+                  use: {
+                    loader: 'babel-loader',
+                    options: {
+                      presets: [['@babel/preset-env', {
+                          debug: false,
+                          corejs: 3,
+                          useBuiltIns: "usage"
+                      }]]
+                    }
+                  }
+                }
+              ]
+            }
+      }))
+      .pipe(gulp.dest(dist + '/js'));
+  
+  return gulp.src("./src/scss/style.scss")
+      .pipe(sass().on('error', sass.logError))
+      .pipe(postcss([autoprefixer()]))
+      .pipe(cleanCSS())
+      .pipe(gulp.dest(dist + '/css'));
+});
