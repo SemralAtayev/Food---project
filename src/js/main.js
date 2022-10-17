@@ -28,6 +28,9 @@ window.addEventListener("DOMContentLoaded", function () {
     slidePrevSelector : ".offer__slider-prev"
   });
   calc();
+
+
+  
   // ----------------------------------------
   // obshiy dom loaded
   // ----------------------------------------
